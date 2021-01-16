@@ -18,10 +18,8 @@ pipeline {
                 sh "${mvnHome}/bin/mvn clean package"
             }
             
-        }
+        }   
         
-            
-        }
     }
 }
 
