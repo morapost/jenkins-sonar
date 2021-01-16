@@ -1,24 +1,33 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven 3.6.3'
-        jdk 'jdk8'
+    environment {
+        mvnHome = tool name: 'maven', type: 'maven'
     }
+    
     stages {
-        stage ('Initialize') {
+
+        stage('Git checkout') {
             steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
+                git credentialsId: 'github-login', url: 'https://github.com/morapost/jenkins-sonar', branch: 'main'
             }
         }
 
         stage ('Build') {
             steps {
-                sh 'mvn clean package' 
+                
+                sh "${mvnHome}/bin/mvn clean package"
+            }
+            
+        }
+        stage ('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarQube') {
+                    sh "${mvnHome}/bin/mvn package sonar:sonar"
+                }
             }
             
         }
     }
 }
+
+
