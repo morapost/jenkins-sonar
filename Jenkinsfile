@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        mvnHome = tool name: 'maven', type: 'maven'
+        mvnHome = tool name: 'maven-3', type: 'maven'
     }
     
     stages {
@@ -19,12 +19,7 @@ pipeline {
             }
             
         }
-        stage ('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarQube') {
-                    sh "${mvnHome}/bin/mvn package sonar:sonar"
-                }
-            }
+        
             
         }
     }
